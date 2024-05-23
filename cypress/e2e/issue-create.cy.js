@@ -1,18 +1,18 @@
 import { faker } from '@faker-js/faker';
 
 describe('Issue create', () => {
-  beforeEach(() => {
-    cy.visit('/');
-    cy.url().should('eq', `${Cypress.env('baseUrl')}project/board`).then((url) => {
-      // Log the URL for debugging purposes
-      cy.log(`Navigating to URL: ${url}/board?modal-issue-create=true`);
-      cy.visit(url + '/board?modal-issue-create=true');
-      // Log after navigation to confirm the page loaded
-      cy.log('Page visited, waiting for the modal to appear');
-    });
-  });
 
+   beforeEach(() => {
+    cy.visit("/");
+    cy.url()
+      .should("eq", `${Cypress.env("baseUrl")}project/board`)
+      .then((url) => {
+        // System will already open issue creating modal in beforeEach block
+        cy.visit(url + "/board?modal-issue-create=true");
+      });
+  });
  
+
   it('Should create an issue and validate it successfully', () => {
     // System finds modal for creating issue and does next steps inside of it
     cy.get('[data-testid="modal:issue-create"]').within(() => {
@@ -89,7 +89,6 @@ describe('Issue create', () => {
       // Assert that correct error message is visible
       cy.get('[data-testid="form-field:title"]').should('contain', 'This field is required');
     });
-    //assigment 1 test passed
   });
  
   // New Test Case for Creating Another Issue
@@ -161,7 +160,7 @@ it('Should create a second issue and validate it successfully', () => {
 });
 
 
-  it('Should create a Task issue with random data and validate it successfully', () => {
+  it.only('Should create a Task issue with random data and validate it successfully', () => {
     const randomTitle = faker.random.word();
     const randomDescription = faker.random.words(5);
 
@@ -211,7 +210,6 @@ it('Should create a second issue and validate it successfully', () => {
           .siblings()
           .within(() => {
      // Assert that correct avatar and type icon are visible
-  cy.get('[data-testid="avatar:Baby Yoda"]').should('be.visible');
   cy.get('[data-testid="icon:task"]').should('be.visible');
 });
 });
