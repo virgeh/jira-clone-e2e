@@ -6,6 +6,7 @@ describe("Time Tracking Functionality", () => {
       .then((url) => {
         cy.visit(url + "/board");
         cy.url().should("include", "/board");
+        cy.wait(10000); // Add wait time here
         cy.contains("This is an issue of type: Task.").click();
         cy.get('[data-testid="modal:issue-details"]').should("be.visible");
       });
@@ -35,8 +36,7 @@ describe("Time Tracking Functionality", () => {
     cy.contains("button", "Done").click({ force: true }).should("not.exist");
     cy.get('[data-testid="modal:issue-details"]')
       .should("be.visible")
-      .contains("Estimated")
-      .should("contain", newEstimation);
+      .should("contain", `${newEstimation} estimated`);
   };
 
   const removeEstimation = () => {
@@ -62,8 +62,7 @@ describe("Time Tracking Functionality", () => {
     cy.contains("button", "Done").click({ force: true }).should("not.exist");
     cy.get('[data-testid="modal:issue-details"]')
       .should("be.visible")
-      .contains("Logged", { timeout: 10000 })
-      .should("contain", timeSpent);
+      .and("contain", `${timeSpent} logged`);
   };
 
   it("Should add, edit, and remove a time estimation successfully", () => {
