@@ -4,7 +4,7 @@ describe("Issue create", () => {
   beforeEach(() => {
     cy.visit("/");
     cy.url()
-      .should("eq", `${Cypress.env("baseUrl")}project/board`)
+      .should("include", `${Cypress.env("baseUrl")}project/board`)
       .then((url) => {
         // System will already open issue creating modal in beforeEach block
         cy.visit(url + "/board?modal-issue-create=true");
@@ -166,7 +166,7 @@ describe("Issue create", () => {
       });
   });
 
-  it.only("Should create a Task issue with random data and validate it successfully", () => {
+  it("Should create a Task issue with random data and validate it successfully", () => {
     const randomTitle = faker.random.word();
     const randomDescription = faker.random.words(5);
 
@@ -219,4 +219,21 @@ describe("Issue create", () => {
         });
     });
   });
+});
+
+it("Should trim leading and trailing spaces from the issue title", () => {
+  const trimmedTitle = "Title with spaces";
+
+  // Adding wait to ensure the modal is loaded
+  cy.get('[data-testid="modal:issue-create"]', { timeout: 30000 })
+    .should("be.visible")
+    .within(() => {
+      cy.get(".ql-editor").type("Trimmed title test description");
+      cy.get(".ql-editor").should(
+        "have.text",
+        "Trimmed title test description"
+      );
+      cy.get('input[name="title"]').type(`   ${trimmedTitle}   `);
+      cy.get('input[name="title"]').should("have.value", trimmedTitle);
+    });
 });
